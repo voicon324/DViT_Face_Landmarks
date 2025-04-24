@@ -152,6 +152,4 @@ Dự án này được cấp phép theo Giấy phép MIT. Xem tệp `LICENSE` (n
 
 ## Tài liệu tham khảo
 
-*   Zhang, J., et al. (2023). *DViT: Dual-View Vision Transformer for Facial Landmark Detection*. (Cung cấp trích dẫn/liên kết cụ thể nếu có)
-*   Sagonas, C., et al. (2013). *300 faces in-the-wild challenge: The first facial landmark localization challenge*. IEEE ICCV Workshops.
-*   Wang, X., et al. (2018). *Adaptive Wing Loss for Robust Face Alignment via Heatmap Regression*. IEEE ICCV.
+*  *Cascaded Dual Vision Transformer for Accurate Facial Landmark Detection*.
