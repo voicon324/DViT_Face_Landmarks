@@ -34,7 +34,7 @@ def draw_landmarks(image, landmarks, color=(0, 255, 0), radius=2):
 
 # Visualization function adapted from notebook
 # Takes model, dataset, config parameters needed
-def visualize_ Hpredictions_heatmaps(
+def visualize_Hpredictions_heatmaps(
     model,
     vis_dataset, # Instance of the dataset (e.g., FaceLandmark300WDataset)
     config, # Dictionary or config object with IMG_SIZE, FEATURE_W, FEATURE_H, NUM_LANDMARKS etc.
@@ -178,4 +178,4 @@ def visualize_ Hpredictions_heatmaps(
     os.makedirs(os.path.dirname(save_path), exist_ok=True)
     plt.savefig(save_path, dpi=150)
     print(f"Visualization saved to {save_path}")
-    plt.show() # Also display it interactively
+    plt.show() 
