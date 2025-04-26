@@ -40,7 +40,7 @@ def main():
         img_size=config.IMG_SIZE,
         num_blocks=config.NUM_BLOCKS,
         num_landmarks=config.NUM_LANDMARKS,
-        backbone_out_chans_target=config.BACKBONE_CHANNELS, # Target output from backbone stage
+        backbone_out_chans=config.BACKBONE_CHANNELS, # Target output from backbone stage
         dvit_chans=config.DVIT_INTERNAL_CHANNELS,
         embed_dim=config.VIT_EMBED_DIM,
         depth=config.VIT_DEPTH,
