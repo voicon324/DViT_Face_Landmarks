@@ -105,47 +105,27 @@ class FaceLandmark300WDataset(Dataset):
             return False
 
     def _parse_pts_file(self, file_path):
-        """Reads coordinates from a .pts file"""
+        """Đọc tọa độ từ file .pts"""
         landmarks = []
-        try:
-            with open(file_path, 'r') as f:
-                lines = f.readlines()
-                # Find the start and end of the points section reliably
-                try:
-                    start_index = lines.index('{\n') + 1
-                    end_index = lines.index('}\n')
-                except ValueError:
-                    print(f"Error: Could not find '{{' or '}}' in {file_path}")
-                    return None
-
-                point_lines = lines[start_index:end_index]
-
-                # Validate number of points against expected landmarks
-                if len(point_lines) != self.num_landmarks:
-                    print(f"Warning: Expected {self.num_landmarks} landmarks in {file_path}, but found {len(point_lines)}. Check file format.")
-                    # Handle mismatch: return None, or pad/truncate, or raise error
-                    return None # Returning None is safer
-
-                for line in point_lines:
-                    coords = line.strip().split()
-                    if len(coords) == 2:
-                        try:
-                            landmarks.append([float(coords[0]), float(coords[1])]) # x, y
-                        except ValueError:
-                             print(f"Warning: Invalid coordinate value in {file_path}: '{line.strip()}'. Using [0,0].")
-                             landmarks.append([0.0, 0.0]) # Default on conversion error
-                    else:
-                        print(f"Warning: Invalid coordinate format in {file_path}: '{line.strip()}'. Using [0,0].")
-                        landmarks.append([0.0, 0.0]) # Default on format error
-
-            return np.array(landmarks, dtype=np.float32)
-
-        except FileNotFoundError:
-            print(f"Error: Cannot open landmark file {file_path}")
-            return None
-        except Exception as e:
-            print(f"Error parsing landmark file {file_path}: {e}")
-            return None
+        with open(file_path, 'r') as f:
+            lines = f.readlines()
+            # Bỏ qua header (ví dụ: "version: 1", "n_points: 68", "{")
+            point_lines = lines[lines.index('{\n')+1 : -1] # Lấy các dòng giữa { và }
+            if len(point_lines) != self.num_landmarks:
+                 print(f"Warning: Expected {self.num_landmarks} landmarks in {file_path}, but found {len(point_lines)}. Check file format.")
+                 # Có thể return None hoặc xử lý lỗi khác
+                 return None # Trả về None nếu số landmark không đúng
+    
+            for line in point_lines:
+                coords = line.strip().split()
+                if len(coords) == 2:
+                    landmarks.append([float(coords[0]), float(coords[1])]) # x, y
+                else:
+                     print(f"Warning: Invalid coordinate format in {file_path}: '{line.strip()}'. Skipping this landmark.")
+                     # Có thể cần xử lý lỗi chặt chẽ hơn
+                     landmarks.append([0.0, 0.0]) # Tạm thời gán giá trị mặc định
+    
+        return np.array(landmarks, dtype=np.float32)
 
 
     def __getitem__(self, idx):
