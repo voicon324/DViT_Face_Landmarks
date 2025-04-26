@@ -79,12 +79,3 @@ Thực hiện các lệnh sau từ thư mục gốc của dự án (`DViT_Face_L
     ```
     *   Tiến trình huấn luyện sẽ được hiển thị trên console.
     *   Các checkpoint (đặc biệt là `best_model.pth`) và biểu đồ mất mát (`loss_curve.png`) sẽ được lưu vào thư mục `results/EXPERIMENT_NAME` (ví dụ: `results/DViT_300W_Demo`).
-
-3.  **Đánh giá Mô hình:**
-    *   Đánh giá hiệu năng của mô hình đã huấn luyện trên tập kiểm tra 300W.
-    ```bash
-    python scripts/evaluate.py --checkpoint results/DViT_300W_Demo/best_model.pth --dataset_name 300w
-    ```
-    *   *(Thay thế đường dẫn `--checkpoint` nếu cần)*.
-    *   Các chỉ số NME, FR, AUC sẽ được in ra.
-    *   Biểu đồ CED (`ced_curve_300w.png`) sẽ được lưu vào thư mục `results/`.
