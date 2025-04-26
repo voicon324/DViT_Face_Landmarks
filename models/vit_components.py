@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 
-# MLP, Attention, ViTBlock classes remain the same as in the notebook
 class MLP(nn.Module):
     """ Multi-Layer Perceptron """
     def __init__(self, in_features, hidden_features=None, out_features=None, act_layer=nn.GELU, drop=0.):
@@ -27,9 +26,7 @@ class Attention(nn.Module):
         super().__init__()
         self.num_heads = num_heads
         head_dim = dim // num_heads
-        # NOTE scale factor was wrong in my original version, can set manually to avoid NaN potential
-        # self.scale = qk_scale or head_dim ** -0.5
-        self.scale = head_dim ** -0.5 # Correct scaling
+        self.scale = qk_scale or head_dim ** -0.5
 
         self.qkv = nn.Linear(dim, dim * 3, bias=qkv_bias)
         self.attn_drop = nn.Dropout(attn_drop)
@@ -39,7 +36,7 @@ class Attention(nn.Module):
     def forward(self, x):
         B, N, C = x.shape
         qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, C // self.num_heads).permute(2, 0, 3, 1, 4)
-        q, k, v = qkv[0], qkv[1], qkv[2]   # make torchscript happy (cannot use tensor as tuple)
+        q, k, v = qkv[0], qkv[1], qkv[2] 
 
         attn = (q @ k.transpose(-2, -1)) * self.scale
         attn = attn.softmax(dim=-1)
@@ -50,7 +47,6 @@ class Attention(nn.Module):
         x = self.proj_drop(x)
         return x
 
-
 class ViTBlock(nn.Module):
     """ Standard Vision Transformer Block """
     def __init__(self, dim, num_heads, mlp_ratio=4., qkv_bias=False, qk_scale=None, drop=0., attn_drop=0.,
@@ -59,9 +55,8 @@ class ViTBlock(nn.Module):
         self.norm1 = norm_layer(dim)
         self.attn = Attention(
             dim, num_heads=num_heads, qkv_bias=qkv_bias, qk_scale=qk_scale, attn_drop=attn_drop, proj_drop=drop)
-        # NOTE: drop path for stochastic depth, we shall assume drop_path=0.0 for simplicity.
-        # self.drop_path = DropPath(drop_path) if drop_path > 0. else nn.Identity()
-        self.drop_path = nn.Identity() # Keep it simple
+       
+        self.drop_path = nn.Identity()
         self.norm2 = norm_layer(dim)
         mlp_hidden_dim = int(dim * mlp_ratio)
         self.mlp = MLP(in_features=dim, hidden_features=mlp_hidden_dim, act_layer=act_layer, drop=drop)
