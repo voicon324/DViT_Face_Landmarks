@@ -10,6 +10,9 @@ import time
 import numpy as np
 from tqdm import tqdm
 import matplotlib.pyplot as plt
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 # Project specific imports
 from config import config
