@@ -1,8 +1,4 @@
-# Phát hiện Điểm mốc Khuôn mặt bằng DViT trên Tập dữ liệu 300W
-
-Dự án này trình bày việc triển khai, huấn luyện và đánh giá mô hình Transformer Thị giác Kép (Dual Vision Transformer - DViT) cho bài toán định vị điểm mốc khuôn mặt, dựa trên bài báo "DViT: Dual-View Vision Transformer for Facial Landmark Detection". Việc triển khai này tập trung vào tập dữ liệu benchmark 300W và bao gồm một ứng dụng Streamlit để trực quan hóa kết quả tương tác.
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) <!-- Tùy chọn: Thêm các huy hiệu khác nếu cần -->
+# Phát hiện Điểm mốc Khuôn mặt bằng DViT
 
 ## Tổng quan
 
@@ -13,7 +9,6 @@ Dự án này trình bày việc triển khai, huấn luyện và đánh giá m�
 *   Script huấn luyện với hàm mất mát kết hợp (Awing Loss + Smooth L1) và giám sát trung gian.
 *   Script đánh giá hiệu năng sử dụng các chỉ số tiêu chuẩn (NME, FR@0.10, AUC@0.10).
 *   Script trực quan hóa tĩnh kết quả dự đoán và bản đồ nhiệt.
-*   Một ứng dụng Streamlit tương tác để khám phá kết quả mô hình trên các ảnh cụ thể.
 
 ## Tính năng chính
 
@@ -24,19 +19,6 @@ Dự án này trình bày việc triển khai, huấn luyện và đánh giá m�
 *   **Hàm Mất mát Nâng cao:** Sử dụng Awing Loss cho bản đồ nhiệt và Smooth L1 Loss cho tọa độ.
 *   **Hỗ trợ 300W:** Cung cấp lớp `Dataset` và script chuẩn bị dữ liệu riêng cho tập 300W (68 điểm mốc).
 *   **Đánh giá Tiêu chuẩn:** Tính toán NME (Full, Common, Challenging), FR, và AUC.
-*   **Trực quan hóa:** Cung cấp cả script tạo ảnh tĩnh và ứng dụng Streamlit động.
-
-
-## Yêu cầu Hệ thống
-
-*   **Python:** Phiên bản 3.8 trở lên.
-*   **PyTorch:** Phiên bản 1.10.0 trở lên (khuyến nghị phiên bản mới nhất có hỗ trợ CUDA phù hợp).
-*   **CUDA Toolkit:** Nếu sử dụng GPU Nvidia (khuyến nghị), cần cài đặt phiên bản CUDA tương thích với PyTorch.
-*   **Các gói Python khác:** Xem chi tiết trong `requirements.txt`.
-*   **Dung lượng:** Đủ dung lượng để lưu trữ tập dữ liệu 300W (vài GB) và các mô hình đã huấn luyện.
-*   **Phần cứng:**
-    *   **CPU:** Có thể chạy trên CPU nhưng sẽ rất chậm, đặc biệt là quá trình huấn luyện.
-    *   **GPU:** Khuyến nghị sử dụng GPU Nvidia có hỗ trợ CUDA và bộ nhớ VRAM đủ lớn (ví dụ: >= 8GB) để huấn luyện hiệu quả.
 
 ## Cài đặt
 
@@ -63,7 +45,6 @@ Dự án này trình bày việc triển khai, huấn luyện và đánh giá m�
 
 4.  **Tải Tập dữ liệu 300W:**
     *   Tải tập dữ liệu `ibug_300W_large_face_landmark_dataset` từ nguồn chính thức hoặc các nguồn đáng tin cậy khác.
-    *   Giải nén và đặt thư mục dữ liệu vào một vị trí bạn chọn (ví dụ: `/path/to/datasets/`).
 
 5.  **Cấu hình Dự án:**
     *   Mở tệp `config/config.py`.
@@ -79,7 +60,7 @@ Dự án này trình bày việc triển khai, huấn luyện và đánh giá m�
         *   Để sử dụng GPU 0 và 1 với DataParallel: `GPU_IDS = [0, 1]`
     *   (Tùy chọn) Điều chỉnh các siêu tham số khác như `BATCH_SIZE`, `NUM_EPOCHS`, `LEARNING_RATE` nếu cần.
 
-## Hướng dẫn Sử dụng
+## Hướng dẫn Sử dụng (300W)
 
 Thực hiện các lệnh sau từ thư mục gốc của dự án (`DViT_Face_Landmarks/`).
 
@@ -107,49 +88,3 @@ Thực hiện các lệnh sau từ thư mục gốc của dự án (`DViT_Face_L
     *   *(Thay thế đường dẫn `--checkpoint` nếu cần)*.
     *   Các chỉ số NME, FR, AUC sẽ được in ra.
     *   Biểu đồ CED (`ced_curve_300w.png`) sẽ được lưu vào thư mục `results/`.
-
-4.  **Trực quan hóa Tĩnh:**
-    *   Tạo ảnh hiển thị dự đoán và heatmap cho một số mẫu ngẫu nhiên từ tập kiểm tra.
-    ```bash
-    python scripts/visualize_predictions.py --checkpoint results/DViT_300W_Demo/best_model.pth --dataset_name 300w --num_samples 10
-    ```
-    *   *(Thay thế đường dẫn `--checkpoint` và điều chỉnh `--num_samples` nếu muốn)*.
-    *   Ảnh kết quả (`prediction_visualization.png`) sẽ được lưu vào thư mục `results/`.
-
-5.  **Trực quan hóa Tương tác (Streamlit):**
-    *   Khởi chạy ứng dụng web Streamlit.
-    ```bash
-    streamlit run streamlit_app.py
-    ```
-    *   Một tab mới trên trình duyệt sẽ mở ra.
-    *   Làm theo hướng dẫn trên giao diện: nhập đường dẫn checkpoint, tải mô hình, chọn ảnh từ tập test hoặc tải lên ảnh của bạn, và xem kết quả/heatmap.
-
-## Kết quả Dự kiến
-
-Sau khi chạy các script, bạn sẽ thu được:
-
-*   Các tệp danh sách dữ liệu (`.txt`).
-*   Các tệp checkpoint mô hình (`.pth`).
-*   Các chỉ số đánh giá hiệu năng (NME, FR, AUC) được in ra màn hình.
-*   Các tệp hình ảnh trực quan hóa (`loss_curve.png`, `ced_curve_*.png`, `prediction_visualization.png`).
-*   Khả năng chạy ứng dụng Streamlit để khám phá kết quả tương tác.
-
-Tham khảo tệp `report.md` (nếu có) để xem phân tích chi tiết về kết quả thu được trong một lần chạy cụ thể.
-
-## Đóng góp
-
-Hiện tại, dự án này chủ yếu phục vụ mục đích demo và triển khai. Tuy nhiên, nếu bạn có đề xuất cải tiến hoặc sửa lỗi, vui lòng tạo một "Issue" trên repository (nếu có) để thảo luận.
-
-## Giấy phép
-
-Dự án này được cấp phép theo Giấy phép MIT. Xem tệp `LICENSE` (nếu có) để biết chi tiết.
-
-## Lời cảm ơn
-
-*   Cảm ơn các tác giả của bài báo "DViT: Dual-View Vision Transformer for Facial Landmark Detection" đã đề xuất kiến trúc mô hình.
-*   Cảm ơn những người đã tạo và chia sẻ tập dữ liệu 300W.
-*   Cảm ơn cộng đồng PyTorch, Albumentations, và Streamlit đã cung cấp các công cụ tuyệt vời.
-
-## Tài liệu tham khảo
-
-*  *Cascaded Dual Vision Transformer for Accurate Facial Landmark Detection*.
