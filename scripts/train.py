@@ -140,7 +140,6 @@ def main():
         weight_intermediate=config.LOSS_INTERMEDIATE_WEIGHT_W,
         aw_alpha=config.AWING_ALPHA,
         aw_omega=config.AWING_OMEGA,
-        smooth_l1_beta=config.LOSS_COORD_SMOOTH_L1_BETA
     ).to(device)
 
     optimizer = optim.Adam(model.parameters(), lr=config.LEARNING_RATE, weight_decay=config.WEIGHT_DECAY)
