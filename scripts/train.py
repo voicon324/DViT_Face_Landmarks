@@ -59,27 +59,24 @@ def main():
     print("Setting up data loaders...")
     # Training Augmentations
     train_transform = A.Compose([
-        A.HorizontalFlip(p=config.AUG_HFLIP_PROB),
-        A.ShiftScaleRotate(
-            shift_limit=config.AUG_SHIFT_SCALE_LIMIT,
-            scale_limit=config.AUG_SHIFT_SCALE_LIMIT,
-            rotate_limit=config.AUG_ROTATION_LIMIT,
-            p=0.8,
-            border_mode=cv2.BORDER_CONSTANT, value=0
-        ),
-        A.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1, p=config.AUG_COLOR_JITTER_PROB),
-        A.OneOf([
-            A.GaussianBlur(blur_limit=(3, 7), p=0.5),
-            A.MotionBlur(blur_limit=(3, 7), p=0.5),
-        ], p=config.AUG_BLUR_PROB),
-        A.CoarseDropout(
-            max_holes=8, max_height=int(config.IMG_SIZE*0.1), max_width=int(config.IMG_SIZE*0.1),
-            min_holes=1, min_height=int(config.IMG_SIZE*0.05), min_width=int(config.IMG_SIZE*0.05),
-            fill_value=0, p=config.AUG_COARSE_DROPOUT_PROB
-        ),
-        A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-        ToTensorV2(),
-    ], keypoint_params=A.KeypointParams(format='xy', label_fields=[], remove_invisible=False)) # Crucial: remove_invisible=False
+    # Biến đổi hình học
+    # A.HorizontalFlip(p=0.5),
+    # A.ShiftScaleRotate(shift_limit=0.0625, scale_limit=0.1, rotate_limit=30, p=0.8, border_mode=cv2.BORDER_CONSTANT),
+    # Biến đổi màu sắc, độ sáng
+    A.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1, p=0.5),
+    # Blur và Noise
+    A.OneOf([
+        A.GaussianBlur(blur_limit=(3, 7), p=0.5),
+        A.MotionBlur(blur_limit=(3, 7), p=0.5),
+    ], p=0.3),
+    # Occlusion (che khuất)
+    A.CoarseDropout(max_holes=8, max_height=int(config.IMG_SIZE*0.1), max_width=int(config.IMG_SIZE*0.1),
+                      min_holes=1, min_height=int(config.IMG_SIZE*0.05), min_width=int(config.IMG_SIZE*0.05),
+                      fill_value=0, p=0.5), # fill_value nên là mean pixel hoặc 0
+    # Chuẩn hóa mean/std ImageNet và chuyển sang Tensor PyTorch
+    A.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+    ToTensorV2(), # Chuyển ảnh sang tensor (C, H, W) và keypoints giữ nguyên
+], keypoint_params=A.KeypointParams(format='xy', label_fields=[], remove_invisible=False))
 
     # Validation Transform (minimal augmentation)
     val_transform = A.Compose([
