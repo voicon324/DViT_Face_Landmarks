@@ -34,7 +34,7 @@ def draw_landmarks(image, landmarks, color=(0, 255, 0), radius=2):
 
 # Visualization function adapted from notebook
 # Takes model, dataset, config parameters needed
-def visualize_Hpredictions_heatmaps(
+def visualize_predictions_heatmaps(
     model,
     vis_dataset, # Instance of the dataset (e.g., FaceLandmark300WDataset)
     config, # Dictionary or config object with IMG_SIZE, FEATURE_W, FEATURE_H, NUM_LANDMARKS etc.
